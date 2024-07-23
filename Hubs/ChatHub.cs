@@ -39,11 +39,11 @@ public class ChatHub : Hub
 
 	public async Task SendMessage(string msg)
 	{
-		if (_shared.connections.TryGetValue(Context.ConnectionId, out UserConnection conn)){
-		await Clients.Group(conn.ChatRoom)
-		.SendAsync("ReceiveSpecificMessage",conn.Username, msg);
+        if (_shared.connections.TryGetValue(Context.ConnectionId, out UserConnection conn)){
+			await Clients.Group(conn.ChatRoom)
+			.SendAsync("ReceiveSpecificMessage",conn.Username, msg);
 		}
-			}
+    }
 
 	public void PrintConnections()
 	{

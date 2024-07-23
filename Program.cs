@@ -25,6 +25,7 @@ builder.Services.AddSwaggerGen();
 //Inicialicacion de mi base de datos en memoria
 builder.Services.AddSingleton<SharedDb>();
 builder.Services.AddSingleton<UserHub>();
+builder.Services.AddSingleton<ConnectionManager>();
 builder.Services.AddSingleton<SubscribeUserTableDependency>();
 
 
