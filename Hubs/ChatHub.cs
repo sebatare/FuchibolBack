@@ -39,13 +39,11 @@ public class ChatHub : Hub
 
 	public async Task SendMessage(string msg)
 	{
-#pragma warning disable CS8600 // Se va a convertir un literal nulo o un posible valor nulo en un tipo que no acepta valores NULL
-        if (_shared.connections.TryGetValue(Context.ConnectionId, out UserConnection conn)){
-			await Clients.Group(conn.ChatRoom)
-			.SendAsync("ReceiveSpecificMessage",conn.Username, msg);
+		if (_shared.connections.TryGetValue(Context.ConnectionId, out UserConnection conn)){
+		await Clients.Group(conn.ChatRoom)
+		.SendAsync("ReceiveSpecificMessage",conn.Username, msg);
 		}
-#pragma warning restore CS8600 // Se va a convertir un literal nulo o un posible valor nulo en un tipo que no acepta valores NULL
-    }
+			}
 
 	public void PrintConnections()
 	{

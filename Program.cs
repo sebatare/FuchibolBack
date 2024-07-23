@@ -48,6 +48,7 @@ app.MapControllers();
 // Mapea el hub de SignalR
 app.MapHub<ChatHub>("/chat");
 app.MapHub<UserHub>("/users");
+app.MapHub<ToUserHub>("/touserhub");
 
 app.UseUserTableDependecy();
 
