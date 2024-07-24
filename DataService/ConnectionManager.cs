@@ -1,15 +1,14 @@
-// ConnectionManager.cs
 using System.Collections.Concurrent;
 
 public class ConnectionManager
 {
     private readonly ConcurrentDictionary<string, string> _connections = new ConcurrentDictionary<string, string>();
 
-    public void AddConnection(string userId, string connectionId)
+    public void AddConnection(string email, string connectionId)
     {
-        Console.WriteLine("Funcion AddConection");
-        Console.WriteLine(userId,connectionId);
-        _connections[connectionId] = userId;
+        Console.WriteLine("Funcion AddConnection");
+        Console.WriteLine($"Email: {email}, ConnectionId: {connectionId}");
+        _connections[connectionId] = email;
     }
 
     public void RemoveConnection(string connectionId)

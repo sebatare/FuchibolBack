@@ -10,47 +10,62 @@ namespace Fuchibol.ChatService.Hubs
 		public ToUserHub(ConnectionManager connectionManager)
 		{
 			_connectionManager = connectionManager;
-		}
+;
+	}
 
-		public async Task SendMessage(string user, string message)
-		{
-			await Clients.All.SendAsync("F", user, message);
-		}
+	public async Task SendMessage(string user, string message)
+	{
+		await Clients.All.SendAsync("F", user, message);
+	}
 
-		public async Task SendToUser(string user, string receiverConnectionId, string message)
-		{
-			await Clients.Client(receiverConnectionId).SendAsync("ReceiveMessage", user, message);
-		}
+	public async Task SendToUser(string user, string receiverConnectionId, string message)
+	{
+		await Clients.Client(receiverConnectionId).SendAsync("ReceiveMessage", user, message);
+	}
 
-		public string GetConnectionId() => Context.ConnectionId;
+	public string GetConnectionId() => Context.ConnectionId;
 
-		public override async Task OnConnectedAsync()
-		{
-			var userId = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-			var connectionId = Context.ConnectionId;
+	public override async Task OnConnectedAsync()
+    {
+        var email = Context.User?.FindFirst(ClaimTypes.Email)?.Value;
+        var connectionId = Context.ConnectionId;
 
-            if (userId != null)
-            {
-                _connectionManager.AddConnection(userId, connectionId);
-                await Clients.All.SendAsync("UpdateUsers", _connectionManager.GetAllConnections());
-            }
-			await base.OnConnectedAsync();
-		}
+        // Formatear los claims en un string legible
+        string claimsString = FormatClaims(Context.User);
 
-		public override async Task OnDisconnectedAsync(Exception exception)
-		{
-			_connectionManager.RemoveConnection(Context.ConnectionId);
+        // Imprimir los claims
+        Console.WriteLine(claimsString);
 
-			// Notifica a todos los clientes sobre la actualización de usuarios conectados
-			var users = _connectionManager.GetAllConnections();
-			await Clients.All.SendAsync("UpdateUsers", users);
+        if (email != null)
+        {
+            _connectionManager.AddConnection(email, connectionId);
+            await Clients.All.SendAsync("UpdateUsers", _connectionManager.GetAllConnections());
+        }
 
-			await base.OnDisconnectedAsync(exception);
-		}
+        await base.OnConnectedAsync();
+    }
 
-		public IReadOnlyDictionary<string, string> GetConnectedClients()
-		{
-			return _connectionManager.GetAllConnections();
-		}
+    private string FormatClaims(ClaimsPrincipal user)
+    {
+        var claims = user.Claims.Select(c => new { c.Type, c.Value });
+        return System.Text.Json.JsonSerializer.Serialize(claims);
+    }
+
+
+	public override async Task OnDisconnectedAsync(Exception exception)
+	{
+		_connectionManager.RemoveConnection(Context.ConnectionId);
+
+		// Notifica a todos los clientes sobre la actualización de usuarios conectados
+		var users = _connectionManager.GetAllConnections();
+		await Clients.All.SendAsync("UpdateUsers", users);
+
+		await base.OnDisconnectedAsync(exception);
+	}
+
+	public IReadOnlyDictionary<string, string> GetConnectedClients()
+	{
+		return _connectionManager.GetAllConnections();
+	}
 	}
 }

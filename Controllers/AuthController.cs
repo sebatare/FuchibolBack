@@ -7,43 +7,43 @@ using Fuchibol.ChatService.Models;
 
 namespace Fuchibol.ChatService.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class AuthController : ControllerBase
-    {
-        private readonly IConfiguration _configuration;
-        private readonly List<User> _users = new List<User>
-        {
-            new User { Id = "1", Email = "user@example.com", Password = "password", Name = "User1", Age = 30 }
-            // Agrega más usuarios según sea necesario
-        };
+	[ApiController]
+	[Route("api/[controller]")]
+	public class AuthController : ControllerBase
+	{
+		private readonly IConfiguration _configuration;
+		private readonly List<User> _users = new List<User>
+		{
+			new User { Id = "1", Email = "user@example.com", Password = "password", Name = "User1", Age = 30 }
+			// Agrega más usuarios según sea necesario
+		};
 
-        public AuthController(IConfiguration configuration)
-        {
-            _configuration = configuration;
-        }
+		public AuthController(IConfiguration configuration)
+		{
+			_configuration = configuration;
+		}
 
-        [HttpPost("login")]
-        public IActionResult Login([FromBody] UserLogin UserLogin)
-        {
-            var user = _users.Find(u => u.Email == UserLogin.Email && u.Password == UserLogin.Password);
-            if (user != null)
-            {
-                var token = GenerateJwtToken(user);
-                return Ok(new { token });
-            }
+		[HttpPost("login")]
+		public IActionResult Login([FromBody] UserLogin UserLogin)
+		{
+			var user = _users.Find(u => u.Email == UserLogin.Email && u.Password == UserLogin.Password);
+			if (user != null)
+			{
+				var token = GenerateJwtToken(user);
+				return Ok(new { token });
+			}
 
-            return Unauthorized();
-        }
+			return Unauthorized();
+		}
 
-        private string GenerateJwtToken(User user)
+		private string GenerateJwtToken(User user)
         {
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim("UserId", user.Id),
-                new Claim("Name", user.Name)
+                new Claim(ClaimTypes.Email, user.Email), // Incluye el email como claim
+                new Claim("UserId", user.Id)
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
@@ -59,5 +59,6 @@ namespace Fuchibol.ChatService.Controllers
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
-    }
+
+	}
 }
