@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Fuchibol.ChatService")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+703045b262c8d447351b64d1e39e3a1027fa6c8e")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e4f222be93463f1253e6f4a01508c8d0c24281a3")]
 [assembly: System.Reflection.AssemblyProductAttribute("Fuchibol.ChatService")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Fuchibol.ChatService")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

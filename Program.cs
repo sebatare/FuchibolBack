@@ -2,6 +2,9 @@ using Fuchibol.ChatService.DataService;
 using Fuchibol.ChatService.Hubs;
 using Fuchibol.ChatService.MiddlewareExtensions;
 using Fuchibol.ChatService.SubscribeTableDependencies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,12 +12,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSignalR();
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("reactNative", builder =>
+    options.AddPolicy("reactNative", policyBuilder =>
     {
-        builder.WithOrigins("http://10.0.2.2:8081")
-               .AllowAnyHeader()
-               .AllowAnyMethod()
-               .AllowCredentials();
+        policyBuilder.WithOrigins("http://10.0.2.2:8081")
+                     .AllowAnyHeader()
+                     .AllowAnyMethod()
+                     .AllowCredentials();
     });
 });
 
@@ -22,12 +25,27 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-//Inicialicacion de mi base de datos en memoria
+// Inicialización de la base de datos en memoria
 builder.Services.AddSingleton<SharedDb>();
 builder.Services.AddSingleton<UserHub>();
 builder.Services.AddSingleton<ConnectionManager>();
 builder.Services.AddSingleton<SubscribeUserTableDependency>();
 
+// Configuración de JWT
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+        };
+    });
 
 var app = builder.Build();
 
@@ -42,6 +60,7 @@ app.UseHttpsRedirection();
 app.UseRouting();
 app.UseCors("reactNative"); // Asegúrate de que CORS esté configurado antes de Authorization
 
+app.UseAuthentication(); // Agrega UseAuthentication antes de UseAuthorization
 app.UseAuthorization();
 
 app.MapControllers();

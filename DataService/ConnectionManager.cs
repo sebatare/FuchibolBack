@@ -7,6 +7,8 @@ public class ConnectionManager
 
     public void AddConnection(string userId, string connectionId)
     {
+        Console.WriteLine("Funcion AddConection");
+        Console.WriteLine(userId,connectionId);
         _connections[connectionId] = userId;
     }
 
