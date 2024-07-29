@@ -1,4 +1,3 @@
-obj/Debug/net8.0/Fuchibol.ChatService.AssemblyInfo.cs
-obj/Debug/net8.0/Fuchibol.ChatService.AssemblyInfoInputs.cache
-obj/Debug/net8.0/Fuchibol.ChatService.AssemblyInfo.cs
-obj/Debug/net8.0/Fuchibol.ChatService.AssemblyInfoInputs.cache
+obj/
+bin/
+.vs/
