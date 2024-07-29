@@ -14,7 +14,8 @@ namespace Fuchibol.ChatService.Controllers
 		private readonly IConfiguration _configuration;
 		private readonly List<User> _users = new List<User>
 		{
-			new User { Id = "1", Email = "user@example.com", Password = "password", Name = "User1", Age = 30 }
+			new User { Id = "1", Email = "user@example.com", Password = "password", Name = "User1", Age = 30 },
+			new User { Id = "2", Email = "resu@example.com", Password = "password", Name = "User2", Age = 27 }
 			// Agrega más usuarios según sea necesario
 		};
 
@@ -28,8 +29,10 @@ namespace Fuchibol.ChatService.Controllers
 		{
 			var user = _users.Find(u => u.Email == UserLogin.Email && u.Password == UserLogin.Password);
 			if (user != null)
-			{
+			{	
 				var token = GenerateJwtToken(user);
+				Console.WriteLine("token desde el controlador");
+				Console.WriteLine(token);
 				return Ok(new { token });
 			}
 

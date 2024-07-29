@@ -1,8 +1,10 @@
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 
 namespace Fuchibol.ChatService.Hubs
 {
+	[Authorize]
 	public class ToUserHub : Hub
 	{
 		private readonly ConnectionManager _connectionManager;
@@ -30,11 +32,10 @@ namespace Fuchibol.ChatService.Hubs
         var email = Context.User?.FindFirst(ClaimTypes.Email)?.Value;
         var connectionId = Context.ConnectionId;
 
-        // Formatear los claims en un string legible
-        string claimsString = FormatClaims(Context.User);
-
-        // Imprimir los claims
-        Console.WriteLine(claimsString);
+        foreach (var claim in Context.User.Claims)
+        {
+            Console.WriteLine($"{claim.Type}: {claim.Value}");
+        }
 
         if (email != null)
         {
@@ -45,11 +46,7 @@ namespace Fuchibol.ChatService.Hubs
         await base.OnConnectedAsync();
     }
 
-    private string FormatClaims(ClaimsPrincipal user)
-    {
-        var claims = user.Claims.Select(c => new { c.Type, c.Value });
-        return System.Text.Json.JsonSerializer.Serialize(claims);
-    }
+
 
 
 	public override async Task OnDisconnectedAsync(Exception exception)

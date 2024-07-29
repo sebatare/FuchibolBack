@@ -6,8 +6,6 @@ public class ConnectionManager
 
     public void AddConnection(string email, string connectionId)
     {
-        Console.WriteLine("Funcion AddConnection");
-        Console.WriteLine($"Email: {email}, ConnectionId: {connectionId}");
         _connections[connectionId] = email;
     }
 
