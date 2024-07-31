@@ -27,7 +27,6 @@ public class ChatHub : Hub
 		await Groups.AddToGroupAsync(Context.ConnectionId, conn.ChatRoom);
 
 		_shared.connections[Context.ConnectionId] = conn;
-		Console.WriteLine($"Usuario añadido: {conn.Username} en la sala: {conn.ChatRoom}");
 		// Imprimir todas las conexiones
 		PrintConnections();
 

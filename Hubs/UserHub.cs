@@ -19,12 +19,9 @@ namespace Fuchibol.ChatService.Hubs
 				{
 					var users = userRepository.GetUsers();
 					await Clients.All.SendAsync("ReceivedUsers", users);
-                    Console.WriteLine($"Funcion SendUser, usuarios: {users}");
 				}
 				catch (Exception ex)
 				{
-		// Manejar el error aquí (log, notificación, etc.)
-        Console.WriteLine("Errrorroorororororororoorrrr");
 			throw new HubException("Error retrieving users", ex);
 			}
 		}

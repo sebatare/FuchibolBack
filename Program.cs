@@ -45,28 +45,18 @@ builder.Services.AddAuthentication()
             ValidAudience = builder.Configuration["Jwt:Audience"],
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
         };
-        Console.WriteLine("====================");
-        Console.WriteLine("PARAMETROS DEL SERVICIO CORRECTO");
-        Console.WriteLine("====================");
+
         options.Events = new JwtBearerEvents
         {
             OnMessageReceived = context =>
             {
                 var accessToken = context.Request.Query["access_token"];
-                Console.WriteLine("accesToken:");
-                Console.WriteLine(accessToken);
-                Console.WriteLine("HttpContext");
-                Console.WriteLine(context.HttpContext.Request.Path.StartsWithSegments("/touserhub"));
-                Console.WriteLine("URL completa:");
-                Console.WriteLine(context.HttpContext.Request.Path + context.HttpContext.Request.QueryString);
+
                 if (!string.IsNullOrEmpty(accessToken) && context.HttpContext.Request.Path.StartsWithSegments("/touserhub"))
-                {   Console.WriteLine("XXXXXXXXXXXXXXXXX");
+                {   
                     context.Token = accessToken;
                 }
-                Console.WriteLine("Context Token desde la configuracion del token");
-                Console.WriteLine(context.Token);
-                Console.WriteLine("==========");
-                Console.WriteLine(Task.CompletedTask);
+
                 return Task.CompletedTask;
             }
         };

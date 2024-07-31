@@ -31,7 +31,7 @@ namespace Fuchibol.ChatService.Hubs
     {
         var email = Context.User?.FindFirst(ClaimTypes.Email)?.Value;
         var connectionId = Context.ConnectionId;
-
+		Console.WriteLine("CLAIMS");
         foreach (var claim in Context.User.Claims)
         {
             Console.WriteLine($"{claim.Type}: {claim.Value}");

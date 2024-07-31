@@ -31,8 +31,6 @@ namespace Fuchibol.ChatService.Controllers
 			if (user != null)
 			{	
 				var token = GenerateJwtToken(user);
-				Console.WriteLine("token desde el controlador");
-				Console.WriteLine(token);
 				return Ok(new { token });
 			}
 
